@@ -4,13 +4,8 @@
 		<loc>http://leftleg.hzpub.com/</loc>
 	</url>
 	<url>
-		<loc>http://leftleg.hzpub.com/hello-world-.../</loc>
+		<loc>http://leftleg.hzpub.com/default/blog_in_Github/</loc>
 		<lastmod>2013-04-03</lastmod>
-		<changefreq>weekly</changefreq>
-	</url>
-	<url>
-		<loc>http://leftleg.hzpub.com/2012/new-born.html</loc>
-		<lastmod>2012-12-22</lastmod>
 		<changefreq>weekly</changefreq>
 	</url>
 </urlset>
