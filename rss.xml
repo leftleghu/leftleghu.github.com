@@ -3,24 +3,24 @@
   <channel>
     <title>Leftleg&#39;s blog</title>
     <link>http://leftleg.hzpub.com</link>
-    <pubDate>2013-04-11 05:42:30 +0800</pubDate>
+    <pubDate>2013-04-11 05:51:12 +0800</pubDate>
     <item>
       <title>Cloudfoundry on Openstack 使用 BOSH 完整部署</title>
       <link>http://leftleg.hzpub.com/cloudfoundry/Cloudfoundry-on-Openstack-%E4%BD%BF%E7%94%A8-BOSH-%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2/</link>
       <pubDate>2013-04-11 12:00:00 +0800</pubDate>
-      <description>&lt;h3&gt;了解&lt;/h3&gt;
+      <description>&lt;p&gt;&lt;strong&gt;了解&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://cndocs.cloudfoundry.com/deploy/bosh-docs.html&#34;&gt;什么是bosh&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3&gt;系统需求&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;系统需求&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;仅支持 Ubuntu 10.04 LTS 64-bit image (目前也有人用 centos6 实现)&lt;/p&gt;
 
-&lt;h3&gt;部署过程&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;部署过程&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Inception VM &amp;ndash;&amp;gt; micro-bosh &amp;ndash;&amp;gt; bosh &amp;ndash;&amp;gt; cloudfoundry&lt;/p&gt;
 
-&lt;h3&gt;准备&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;准备&lt;/strong&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Inception VM   1vm&lt;/li&gt;
@@ -33,7 +33,7 @@
 
 &lt;hr /&gt;
 
-&lt;h3&gt;1. 安装 Inception VM 部署 micro-bosh&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1. 安装 Inception VM 部署 micro-bosh&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;用途&lt;/strong&gt; (转)&lt;/p&gt;
 
@@ -45,12 +45,12 @@
 &lt;li&gt;store log files of BOSH CLI interactions with each Micro BOSH&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3&gt;&lt;strong&gt;安装&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;安装&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;使用 &amp;ldquo;Ubuntu 10.04 LTS 64-bit image&amp;rdquo; 镜像在Openstack上创建一个vm,取名 Inception VM (此vm需要能上网,可能还需要能翻墙)
 (也可以使用 fog &lt;a href=&#34;http://fog.io/&#34;&gt;http://fog.io/&lt;/a&gt; 创建一个vm)&lt;/p&gt;
 
-&lt;h4&gt;&lt;em&gt;登录到 Inception VM&lt;/em&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;登录到 Inception VM&lt;/strong&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;export ORIGUSER=ubuntu
 export UBUNTU_ISO=/root/ubuntu-10.04.4-LTS-amd64.iso
@@ -58,7 +58,7 @@ export UBUNTU_ISO=/root/ubuntu-10.04.4-LTS-amd64.iso
 
 &lt;p&gt;上传iso到 /root 目录,此步不是必做,但能提高效率,不然需要的包都从网络取&lt;/p&gt;
 
-&lt;h4&gt;&lt;em&gt;执行初始化环境脚本&lt;/em&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;执行初始化环境脚本&lt;/strong&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;curl -s https://github.com/leftleghu/cloudfoundry/blob/master/prepare_inception_openstack.sh | bash
 &lt;/code&gt;&lt;/pre&gt;
@@ -76,7 +76,7 @@ gem install pkg/bosh_deployer-1.3.1.gem
 
 &lt;p&gt;然后执行  bosh help micro ，看看是否正常输出.&lt;/p&gt;
 
-&lt;h4&gt;&lt;em&gt;配置&lt;/em&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;配置&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;现在可以开始准备部署 micro-bosh,配置文件是 micro_bosh.yml&lt;/p&gt;
 
@@ -103,7 +103,7 @@ chmod 755 /tmp/create_micro_bosh_yml
 /tmp/create_micro_bosh_yml microbosh-openstack openstack OS_USERNAME OS_PASSWORD OS_TENANT_NAME OS_AUTH_URL inception IP_ADDRESS PASSWORD
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4&gt;&lt;em&gt;自定义 stemcell&lt;/em&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;自定义 stemcell&lt;/strong&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;cd /var/vcap/releases/bosh-release  
 bosh create release --with-tarball
@@ -124,7 +124,7 @@ cp /var/tmp/bosh/agent-x.y.z-nnnnn/work/work/micro-bosh-stemcell-openstack-x.y.z
 
 &lt;p&gt;拷贝 stemcell 到部署目录&lt;/p&gt;
 
-&lt;h4&gt;&lt;em&gt;部署 micro-bosh&lt;/em&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;部署 micro-bosh&lt;/strong&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;cd /var/vcap/deployments
 bosh micro deployment microbosh-openstack
