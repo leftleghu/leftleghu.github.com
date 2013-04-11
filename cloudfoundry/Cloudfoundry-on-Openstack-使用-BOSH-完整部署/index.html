@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cloudfoundry on Openstack 使用 BOSH 完整部署</title>
+  
+    <meta name="author" content="Leftleg">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Leftleg&#39;s blog</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Cloudfoundry on Openstack 使用 BOSH 完整部署 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <h3>了解</h3>
+
+<p><a href="http://cndocs.cloudfoundry.com/deploy/bosh-docs.html">什么是bosh</a></p>
+
+<h3>系统需求</h3>
+
+<p>仅支持 Ubuntu 10.04 LTS 64-bit image (目前也有人用 centos6 实现)</p>
+
+<h3>部署过程</h3>
+
+<p>Inception VM &ndash;&gt; micro-bosh &ndash;&gt; bosh &ndash;&gt; cloudfoundry</p>
+
+<p>###准备</p>
+
+<ul>
+<li>Inception VM   1vm</li>
+<li>micro-bosh     1vm</li>
+<li>bosh           8vm</li>
+<li>cloudfoundry   13+ vm</li>
+</ul>
+
+<p><strong>请确认 openstack 各项服务正常 特别是 meta-data 服务</strong></p>
+
+<hr />
+
+<h3>1. 安装 Inception VM 部署 micro-bosh</h3>
+
+<p><strong>用途</strong> (转)</p>
+
+<ul>
+<li>create a custom micro BOSH stemcell</li>
+<li>create an OpenStack image from the custom micro BOSH stemcell</li>
+<li>run a registry of OpenStack to track provisioned components in OpenStack</li>
+<li>store a registry of deployed Micro BOSHes</li>
+<li>store log files of BOSH CLI interactions with each Micro BOSH</li>
+</ul>
+
+<p>###<strong>安装</strong></p>
+
+<p>使用 &ldquo;Ubuntu 10.04 LTS 64-bit image&rdquo; 镜像在Openstack上创建一个vm,取名 Inception VM (此vm需要能上网,可能还需要能翻墙)
+(也可以使用 fog <a href="http://fog.io/">http://fog.io/</a> 创建一个vm)</p>
+
+<h4><em>登录到 Inception VM</em></h4>
+
+<pre><code>export ORIGUSER=ubuntu
+export UBUNTU_ISO=/root/ubuntu-10.04.4-LTS-amd64.iso
+</code></pre>
+
+<p>上传iso到 /root 目录,此步不是必做,但能提高效率,不然需要的包都从网络取</p>
+
+<h4><em>执行初始化环境脚本</em></h4>
+
+<pre><code>curl -s https://github.com/leftleghu/cloudfoundry/blob/master/prepare_inception_openstack.sh | bash
+</code></pre>
+
+<p>此脚本包含了bosh命令所需环境,具体自己看脚本吧</p>
+
+<pre><code>source /etc/profile
+</code></pre>
+
+<p>脚本最后的 bosh help micro , 应该会输出 bosh micro 的帮助信息,不过没输出的话,说明bug还没修补,我们可以执行:</p>
+
+<pre><code>cd /var/vcap/bootstrap/bosh/deployer
+gem install pkg/bosh_deployer-1.3.1.gem
+</code></pre>
+
+<p>然后执行  bosh help micro ，看看是否正常输出.</p>
+
+<h4><em>配置</em></h4>
+
+<p>现在可以开始准备部署 micro-bosh,配置文件是 micro_bosh.yml</p>
+
+<p>关于 Manifest 的语法可以看这里: <a href="https://github.com/panlm/doc/blob/master/documentation.md">https://github.com/panlm/doc/blob/master/documentation.md</a></p>
+
+<pre><code>cd /var/vcap/deployments
+</code></pre>
+
+<p>转到deployments目录，此目录由之前 prepare_inception_openstack.sh 创建</p>
+
+<pre><code>curl -s https://github.com/leftleghu/cloudfoundry/blob/master/create_keypair &gt; /tmp/create_keypair
+chmod 755 /tmp/create_keypair
+</code></pre>
+
+<p>使用脚本创建一个 inception keypair，以后方便登录使用</p>
+
+<pre><code>/tmp/create_keypair openstack OS_USERNAME OS_PASSWORD OS_TENANT_NAME OS_AUTH_URL inception
+</code></pre>
+
+<p>使用脚本生成 micro_bosh.yml</p>
+
+<pre><code>curl -s https://github.com/leftleghu/cloudfoundry/blob/master/create_micro_bosh_yml &gt; /tmp/create_micro_bosh_yml
+chmod 755 /tmp/create_micro_bosh_yml
+/tmp/create_micro_bosh_yml microbosh-openstack openstack OS_USERNAME OS_PASSWORD OS_TENANT_NAME OS_AUTH_URL inception IP_ADDRESS PASSWORD
+</code></pre>
+
+<h4><em>自定义 stemcell</em></h4>
+
+<pre><code>cd /var/vcap/releases/bosh-release  
+bosh create release --with-tarball
+</code></pre>
+
+<p>创建 release，结果会输出:/var/vcap/releases/bosh-release/dev_releases/bosh-x.y-dev.tgz</p>
+
+<pre><code>cd /var/vcap/bootstrap/bosh/agent
+rake stemcell2:micro[&quot;openstack&quot;,/var/vcap/releases/bosh-release/micro/openstack.yml,/var/vcap/releases/bosh-release/dev_releases/bosh-x.y-dev.tgz]
+</code></pre>
+
+<p>创建 stemcell 这样就得到了自定义的stemcell。一切正常的话会输出:<br />
+Generated stemcell: /var/tmp/bosh/agent-x.y.z-nnnnn/work/work/micro-bosh-stemcell-openstack-x.y.z.tgz</p>
+
+<pre><code>cd /var/vcap/stemcells
+cp /var/tmp/bosh/agent-x.y.z-nnnnn/work/work/micro-bosh-stemcell-openstack-x.y.z.tgz .
+</code></pre>
+
+<p>拷贝 stemcell 到部署目录</p>
+
+<h4><em>部署 micro-bosh</em></h4>
+
+<pre><code>cd /var/vcap/deployments
+bosh micro deployment microbosh-openstack
+</code></pre>
+
+<p>一切正常的话部署完毕.</p>
+
+<pre><code>bosh target http://1.2.3.4
+Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)'
+Your username: admin
+Enter password: *****
+Logged in as `admin'
+</code></pre>
+
+<p>可以 target 到 micro-bosh ，默认验证: admin:admin</p>
+
+<pre><code>bosh status
+</code></pre>
+
+<p>查看部署状态</p>
+
+<pre><code>bosh micro status
+</code></pre>
+
+<p>查看micro-bosh状态</p>
+
+<pre><code>cd /var/vcap/deployments
+tail -f microbosh-openstack/bosh_micro_deploy.log
+</code></pre>
+
+<p>排错检查日志</p>
+
+<pre><code>bosh micro delete
+</code></pre>
+
+<p>如果遇到问题，需要重建，最好通过此命令删除 micro-bosh,不要手工删除虚拟机</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+          
+            <li class="prev disabled"><a>&larr; Previous</a></li>
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/default/A-new-beginning/" title="A new beginning">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2013-04-11</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#cloudfoundry-ref">cloudfoundry <span>1</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#cloudfoundry-openstack-bosh-deploy-%E5%AE%8C%E6%95%B4-%E9%83%A8%E7%BD%B2-ref">cloudfoundry openstack bosh deploy 完整 部署 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Leftleg 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script>
+    var _gaq=[['_setAccount','UA-123-12'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+  </body>
+</html>
