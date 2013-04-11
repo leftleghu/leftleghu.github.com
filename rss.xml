@@ -3,7 +3,7 @@
   <channel>
     <title>Leftleg&#39;s blog</title>
     <link>http://leftleg.hzpub.com</link>
-    <pubDate>2013-04-11 05:34:31 +0800</pubDate>
+    <pubDate>2013-04-11 05:42:30 +0800</pubDate>
     <item>
       <title>Cloudfoundry on Openstack 使用 BOSH 完整部署</title>
       <link>http://leftleg.hzpub.com/cloudfoundry/Cloudfoundry-on-Openstack-%E4%BD%BF%E7%94%A8-BOSH-%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2/</link>
@@ -20,7 +20,7 @@
 
 &lt;p&gt;Inception VM &amp;ndash;&amp;gt; micro-bosh &amp;ndash;&amp;gt; bosh &amp;ndash;&amp;gt; cloudfoundry&lt;/p&gt;
 
-&lt;p&gt;###准备&lt;/p&gt;
+&lt;h3&gt;准备&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Inception VM   1vm&lt;/li&gt;
@@ -45,7 +45,7 @@
 &lt;li&gt;store log files of BOSH CLI interactions with each Micro BOSH&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;###&lt;strong&gt;安装&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;&lt;strong&gt;安装&lt;/strong&gt;&lt;/h3&gt;
 
 &lt;p&gt;使用 &amp;ldquo;Ubuntu 10.04 LTS 64-bit image&amp;rdquo; 镜像在Openstack上创建一个vm,取名 Inception VM (此vm需要能上网,可能还需要能翻墙)
 (也可以使用 fog &lt;a href=&#34;http://fog.io/&#34;&gt;http://fog.io/&lt;/a&gt; 创建一个vm)&lt;/p&gt;
