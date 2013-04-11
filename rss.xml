@@ -3,7 +3,7 @@
   <channel>
     <title>Leftleg&#39;s blog</title>
     <link>http://leftleg.hzpub.com</link>
-    <pubDate>2013-04-11 03:59:57 +0800</pubDate>
+    <pubDate>2013-04-11 04:32:08 +0800</pubDate>
     <item>
       <title>A new beginning</title>
       <link>http://leftleg.hzpub.com/default/A-new-beginning/</link>
@@ -14,11 +14,13 @@
 &lt;h2&gt;&lt;img src=&#34;http://pic.yupoo.com/leftleg/C5b6Xltz/medium.jpg&#34; alt=&#34;新的开始&#34; /&gt;
 &lt;/h2&gt;
 
+&lt;hr /&gt;
+
 &lt;p&gt;现在寄居在 Github,相对于以前的地方有如下好处：&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;免费,完全免费&lt;/li&gt;
-&lt;li&gt;稳定,相对于之前的 cloudfoundry appfog openshift,一圈用下来,都不算稳定.&lt;/li&gt;
+&lt;li&gt;稳定,相对于之前的 cloudfoundry appfog openshift,一圈用下来,应该会更稳定.&lt;/li&gt;
 &lt;li&gt;速度快,虽然都在国外,但 cloudfoundry appfog openshift 因为某些原因都是龟速.当然静态的轻量级也是其中一个原因.&lt;/li&gt;
 &lt;li&gt;至上次刷票事件以后,Github 的经历,至少目前来说被xx的可能不大.&lt;/li&gt;
 &lt;/ul&gt;
