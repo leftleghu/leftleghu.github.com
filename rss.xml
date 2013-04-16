@@ -3,7 +3,7 @@
   <channel>
     <title>Leftleg&#39;s blog</title>
     <link>http://leftleg.hzpub.com</link>
-    <pubDate>2013-04-16 02:12:34 +0800</pubDate>
+    <pubDate>2013-04-16 03:43:11 +0800</pubDate>
     <item>
       <title>运维基础</title>
       <link>http://leftleg.hzpub.com/2013/04/16/sa-basic.html</link>
@@ -18,32 +18,224 @@
 </description>
     </item>
     <item>
-      <title>A new beginning</title>
-      <link>http://leftleg.hzpub.com/2013/04/11/A-new-beginning.html</link>
-      <pubDate>2013-04-11 12:00:00 +0800</pubDate>
-      <description>&lt;p&gt;Blog 一个新的开始,以前的Blog还在openshift,换了域名leftleghu.hzpub.com
-不能访问?要翻墙唉！&lt;/p&gt;
+      <title>Cloudfoundry on Openstack 使用 BOSH 完整部署(2)</title>
+      <link>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html</link>
+      <pubDate>2013-04-16 12:00:00 +0800</pubDate>
+      <description>&lt;pre&gt;&lt;code&gt;bosh target http://1.2.3.4 (micro-bosh ip)
+Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)&#39;
+Your username: admin
+Enter password: *****
+Logged in as `admin&#39;
+target 到 micro-bosh
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2&gt;&lt;img src=&#34;http://pic.yupoo.com/leftleg/C5b6Xltz/medium.jpg&#34; alt=&#34;新的开始&#34; /&gt;
-&lt;/h2&gt;
+&lt;p&gt;查看对应openstack最新的 stemcells&lt;/p&gt;
 
-&lt;hr /&gt;
+&lt;pre&gt;&lt;code&gt;bosh public stemcells --all
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;现在寄居在 Github,相对于以前的地方有如下好处：&lt;/p&gt;
+&lt;p&gt;下载 stemcells (比较漫长,看到国外网络状况)&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;免费,完全免费&lt;/li&gt;
-&lt;li&gt;稳定,相对于之前的 cloudfoundry appfog openshift,一圈用下来,应该会更稳定.&lt;/li&gt;
-&lt;li&gt;速度快,虽然都在国外,但 cloudfoundry appfog openshift 因为某些原因都是龟速.当然静态的轻量级也是其中一个原因.&lt;/li&gt;
-&lt;li&gt;至上次刷票事件以后,Github 的经历,至少目前来说被xx的可能不大.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;需要注意的地方:&lt;/p&gt;
+&lt;p&gt;上传到本地&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;因为是静态的缘故,写博客就没有以前那么方便了,还需要操作 Github,如果你也想放在Github的话.&lt;/li&gt;
-&lt;li&gt;其他的,或者具体的,提供几个关键字: &lt;a href=&#34;https://github.com/wendal/gor&#34; title=&#34;gor&#34;&gt;gor&lt;/a&gt; &lt;a href=&#34;http://ruhoh.com/&#34; title=&#34;ruhoh&#34;&gt;ruhoh&lt;/a&gt; &lt;a href=&#34;http://wowubuntu.com/markdown/&#34; title=&#34;markdown&#34;&gt;markdown&lt;/a&gt; &lt;a href=&#34;http://markdownpad.com&#34; title=&#34;markdownpad&#34;&gt;markdownpad&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;建立部署目录，下载bosh源码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir /root/.bosh_deployments
+git clone git://github.com/cloudfoundry/bosh.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;检查更新,下载所有依赖包，并把整个BOSH打包成一个tar包
+这步时间更长,需要耐心,首先会从一个 Blob 服务器下载二进制文件。然后它会构建包并生成清单文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd bosh/release
+git submodule update --init
+bosh create release --with-tarball --force
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;将创建好的Release tar包上传到Micro BOSH的director&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh upload release dev_releases/bosh-x-y-dev.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;确认 releases &amp;amp; stemcell 无误&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh releases
+bosh deployments
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;部署清单可参照:
+&lt;a href=&#34;https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml&#34;&gt;https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh deployment bosh-release.yml
+bosh deploy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;部署完成后,一共8个VM&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh vms
++----------------------+---------+---------------+-----------------------------+
+| Job/index            | State   | Resource Pool | IPs                         |
++----------------------+---------+---------------+-----------------------------+
+| blobstore/0          | running | small         | 172.16.13.31                |
+| director/0           | running | small         | 172.16.13.28, 172.16.13.195 |
+| health_monitor/0     | running | small         | 172.16.13.30                |
+| nats/0               | running | small         | 172.16.13.16                |
+| openstack_registry/0 | running | small         | 172.16.13.29                |
+| postgres/0           | running | small         | 172.16.13.26                |
+| powerdns/0           | running | small         | 172.16.13.27, 172.16.13.194 |
+| redis/0              | running | small         | 172.16.13.15                |
++----------------------+---------+---------------+-----------------------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同样,如果部署中途遇到失败,不要手工删除vm，需要使用如下命令重来:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh -n delete deployment &amp;lt;name&amp;gt; --force
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;部署注意DNS设置,如果有问题,DNS设置成 &lt;strong&gt;micro-bosh ip&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Cloudfoundry on Openstack 使用 BOSH 完整部署 (3)</title>
+      <link>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-III.html</link>
+      <pubDate>2013-04-16 12:00:00 +0800</pubDate>
+      <description>&lt;p&gt;&lt;strong&gt;三 部署 cloudfoundry&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;准备&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;部署计划参考&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;作业  实例数 IP  内存  CPU 磁盘 (GB) 是否为必需的？&lt;br /&gt;
+debian_nfs_server   1   xx.xx.xx.xx 2 GB    2   16  必需&lt;br /&gt;
+nats    1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+ccdb_postgres   1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+uaadb   1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+vcap_redis  1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+uaa 1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+acmdb   1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+acm 1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+cloud_controller    1   xx.xx.xx.xx 2 GB    2   16  必需&lt;br /&gt;
+stager  1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+router  2   xx.xx.xx.xx 512 MB  1   8   必需&lt;br /&gt;
+health_manager  1   xx.xx.xx.xx 1 GB    1   8   必需&lt;br /&gt;
+dea 2   xx.xx.xx.xx 2 GB    2   16  必需&lt;br /&gt;
+mysql_node  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+mysql_gateway   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+mongodb_node    1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+mongodb_gateway 1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+redis_node  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+redis_gateway   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+rabbit_node 1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+rabbit_gateway  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+postgresql_node 1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+postgresql_gateway  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+vblob_node  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+vblob_gateway   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+backup_manager  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+service_utilities   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+serialization_data_server   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+services_nfs    1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+syslog_aggregator   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+services_redis  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+opentsdb    1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+collector   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+dashboard   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+service_broker  1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+hbase_master    1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+hbase_slave 1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+collector   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+login   1   xx.xx.xx.xx 1 GB    1   8   可选&lt;br /&gt;
+合计： 41      42 GB   42  384&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;资源模板&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;池名称  规模 配置  作业&lt;br /&gt;
+&lt;strong&gt;small&lt;/strong&gt;   30  RAM：1 GB；CPU：1 个；磁盘：8 GB    nats、ccdb_postgres、uaadb、vcap_redis、uaa、acmdb、acm、stager、health_manager、mysql_node、service_broker、hbase_master、hbase_slave、login、mysql_gateway、mongodb_node、mongodb_gateway、redis_node、redis_gateway、postgresql_node、postgresql_gateway、vblob_node、vblob_gateway、backup_manager、service_utilities、serialization_data_server、services_nfs、syslog_aggregator、services_redis、opentsdb、collector、dashboard&lt;br /&gt;
+&lt;strong&gt;medium&lt;/strong&gt;  4   RAM：2 GB；CPU：2 个；磁盘：16 GB   debian_nfs_server、cloud_controller、dea&lt;br /&gt;
+router  2   RAM：512 M；CPU：1 个；磁盘：8 GB   router&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;根据以上,指定你需要的内容以及需要使用的Openstack资源模板(后面写yml需要使用)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh target http://1.2.3.4 (bosh director ip)
+Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)&#39;
+Your username: admin
+Enter password: *****
+Logged in as `admin&#39;
+target 到 bosh director
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;查看对应openstack最新的 stemcells&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh public stemcells --all
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下载 stemcells (比较漫长,看到国外网络状况)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上传到本地&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;建立部署目录，下载 cf-release 源码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir /root/.bosh_deployments
+git clone https://github.com/cloudfoundry/cf-release
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;检查更新,下载所有依赖包，并把整个 cloudfoundry 打包成一个tar包
+这步时间更长,需要耐心,首先会从一个 Blob 服务器下载二进制文件。然后它会构建包并生成清单文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd bosh/release
+git submodule update --init
+bosh create release --with-tarball --force
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;将创建好的Release tar包上传到 BOSH 的director&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh upload release dev_releases/bosh-x-y-dev.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;确认 releases &amp;amp; stemcell 无误&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh releases
+bosh deployments
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;部署清单可参照:&lt;br /&gt;
+&lt;a href=&#34;https://github.com/leftleghu/cloudfoundry/blob/master/cfos.yml&#34;&gt;https://github.com/leftleghu/cloudfoundry/blob/master/cfos.yml&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;利用示例部署完成后,一共 29 个VM&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh deployment bosh-release.yml
+bosh deploy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;问题:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;dns 问题, 可能配置问题,dns会去取Openstack nova 的设置,但 vm dns 需要设置为 micro-bosh 地址,才可正常解析,保证agent服务正常&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;服务监听地址问题,很几个服务配置模板取的是vip地址监听,会导致错误,需要修改成0.0.0.0,应该是个Bug.
+如果自己修改的话，需要先修改 vm .erb 模板的变量,再修改配置,最后别忘记重启 monit restart all&lt;/li&gt;
+&lt;li&gt;部署并发进程问题,这也应该是个Bug,初次部署,会一次性部署所有的VM,比如29个VM，openstack需要时间,但部署超时90S，超时后会报错误。
+所以，需要手工修改并发的数量: &lt;a href=&#34;https://github.com/cloudfoundry/bosh/blob/master/director/lib/director/jobs/update_deployment.rb#L85&#34;&gt;https://github.com/cloudfoundry/bosh/blob/master/director/lib/director/jobs/update_deployment.rb#L85&lt;/a&gt;
+ps：貌似bug已经修复，可以通过(director/templates/director.yml.erb)这个模板调配。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;参考资源&lt;/strong&gt;&lt;br /&gt;
+&lt;a href=&#34;http://cndocs.cloudfoundry.com/&#34;&gt;http://cndocs.cloudfoundry.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;http://blog.csdn.net/alan90121/article/details/8181962&#34;&gt;http://blog.csdn.net/alan90121/article/details/8181962&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;http://cloudfoundry.github.com/&#34;&gt;http://cloudfoundry.github.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/bosh-users&#34;&gt;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/bosh-users&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/vcap-dev&#34;&gt;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/vcap-dev&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     <item>
@@ -203,6 +395,35 @@ tail -f microbosh-openstack/bosh_micro_deploy.log
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;如果遇到问题，需要重建，最好通过此命令删除 micro-bosh,不要手工删除虚拟机&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>A new beginning</title>
+      <link>http://leftleg.hzpub.com/2013/04/11/A-new-beginning.html</link>
+      <pubDate>2013-04-11 12:00:00 +0800</pubDate>
+      <description>&lt;p&gt;Blog 一个新的开始,以前的Blog还在openshift,换了域名leftleghu.hzpub.com
+不能访问?要翻墙唉！&lt;/p&gt;
+
+&lt;h2&gt;&lt;img src=&#34;http://pic.yupoo.com/leftleg/C5b6Xltz/medium.jpg&#34; alt=&#34;新的开始&#34; /&gt;
+&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;现在寄居在 Github,相对于以前的地方有如下好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;免费,完全免费&lt;/li&gt;
+&lt;li&gt;稳定,相对于之前的 cloudfoundry appfog openshift,一圈用下来,应该会更稳定.&lt;/li&gt;
+&lt;li&gt;速度快,虽然都在国外,但 cloudfoundry appfog openshift 因为某些原因都是龟速.当然静态的轻量级也是其中一个原因.&lt;/li&gt;
+&lt;li&gt;至上次刷票事件以后,Github 的经历,至少目前来说被xx的可能不大.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;需要注意的地方:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;因为是静态的缘故,写博客就没有以前那么方便了,还需要操作 Github,如果你也想放在Github的话.&lt;/li&gt;
+&lt;li&gt;其他的,或者具体的,提供几个关键字: &lt;a href=&#34;https://github.com/wendal/gor&#34; title=&#34;gor&#34;&gt;gor&lt;/a&gt; &lt;a href=&#34;http://ruhoh.com/&#34; title=&#34;ruhoh&#34;&gt;ruhoh&lt;/a&gt; &lt;a href=&#34;http://wowubuntu.com/markdown/&#34; title=&#34;markdown&#34;&gt;markdown&lt;/a&gt; &lt;a href=&#34;http://markdownpad.com&#34; title=&#34;markdownpad&#34;&gt;markdownpad&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
   </channel>

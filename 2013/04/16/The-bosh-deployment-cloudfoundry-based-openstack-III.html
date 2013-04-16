@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cloudfoundry on Openstack 使用 BOSH 完整部署 (3)</title>
+  
+    <meta name="author" content="Leftleg">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Leftleg&#39;s blog</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Cloudfoundry on Openstack 使用 BOSH 完整部署 (3) </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p><strong>三 部署 cloudfoundry</strong></p>
+
+<p><strong>准备</strong></p>
+
+<p><strong>部署计划参考</strong></p>
+
+<p>作业  实例数 IP  内存  CPU 磁盘 (GB) 是否为必需的？<br />
+debian_nfs_server   1   xx.xx.xx.xx 2 GB    2   16  必需<br />
+nats    1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+ccdb_postgres   1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+uaadb   1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+vcap_redis  1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+uaa 1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+acmdb   1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+acm 1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+cloud_controller    1   xx.xx.xx.xx 2 GB    2   16  必需<br />
+stager  1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+router  2   xx.xx.xx.xx 512 MB  1   8   必需<br />
+health_manager  1   xx.xx.xx.xx 1 GB    1   8   必需<br />
+dea 2   xx.xx.xx.xx 2 GB    2   16  必需<br />
+mysql_node  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+mysql_gateway   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+mongodb_node    1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+mongodb_gateway 1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+redis_node  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+redis_gateway   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+rabbit_node 1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+rabbit_gateway  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+postgresql_node 1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+postgresql_gateway  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+vblob_node  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+vblob_gateway   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+backup_manager  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+service_utilities   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+serialization_data_server   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+services_nfs    1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+syslog_aggregator   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+services_redis  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+opentsdb    1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+collector   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+dashboard   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+service_broker  1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+hbase_master    1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+hbase_slave 1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+collector   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+login   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
+合计： 41      42 GB   42  384</p>
+
+<p><strong>资源模板</strong></p>
+
+<p>池名称  规模 配置  作业<br />
+<strong>small</strong>   30  RAM：1 GB；CPU：1 个；磁盘：8 GB    nats、ccdb_postgres、uaadb、vcap_redis、uaa、acmdb、acm、stager、health_manager、mysql_node、service_broker、hbase_master、hbase_slave、login、mysql_gateway、mongodb_node、mongodb_gateway、redis_node、redis_gateway、postgresql_node、postgresql_gateway、vblob_node、vblob_gateway、backup_manager、service_utilities、serialization_data_server、services_nfs、syslog_aggregator、services_redis、opentsdb、collector、dashboard<br />
+<strong>medium</strong>  4   RAM：2 GB；CPU：2 个；磁盘：16 GB   debian_nfs_server、cloud_controller、dea<br />
+router  2   RAM：512 M；CPU：1 个；磁盘：8 GB   router</p>
+
+<p><strong>根据以上,指定你需要的内容以及需要使用的Openstack资源模板(后面写yml需要使用)</strong></p>
+
+<pre><code>bosh target http://1.2.3.4 (bosh director ip)
+Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)'
+Your username: admin
+Enter password: *****
+Logged in as `admin'
+target 到 bosh director
+</code></pre>
+
+<p>查看对应openstack最新的 stemcells</p>
+
+<pre><code>bosh public stemcells --all
+</code></pre>
+
+<p>下载 stemcells (比较漫长,看到国外网络状况)</p>
+
+<pre><code>bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
+</code></pre>
+
+<p>上传到本地</p>
+
+<pre><code>bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
+</code></pre>
+
+<p>建立部署目录，下载 cf-release 源码</p>
+
+<pre><code>mkdir /root/.bosh_deployments
+git clone https://github.com/cloudfoundry/cf-release
+</code></pre>
+
+<p>检查更新,下载所有依赖包，并把整个 cloudfoundry 打包成一个tar包
+这步时间更长,需要耐心,首先会从一个 Blob 服务器下载二进制文件。然后它会构建包并生成清单文件</p>
+
+<pre><code>cd bosh/release
+git submodule update --init
+bosh create release --with-tarball --force
+</code></pre>
+
+<p>将创建好的Release tar包上传到 BOSH 的director</p>
+
+<pre><code>bosh upload release dev_releases/bosh-x-y-dev.tgz
+</code></pre>
+
+<p>确认 releases &amp; stemcell 无误</p>
+
+<pre><code>bosh releases
+bosh deployments
+</code></pre>
+
+<p>部署清单可参照:<br />
+<a href="https://github.com/leftleghu/cloudfoundry/blob/master/cfos.yml">https://github.com/leftleghu/cloudfoundry/blob/master/cfos.yml</a></p>
+
+<p>利用示例部署完成后,一共 29 个VM</p>
+
+<pre><code>bosh deployment bosh-release.yml
+bosh deploy
+</code></pre>
+
+<p><strong>问题:</strong></p>
+
+<ol>
+<li>dns 问题, 可能配置问题,dns会去取Openstack nova 的设置,但 vm dns 需要设置为 micro-bosh 地址,才可正常解析,保证agent服务正常<br /></li>
+<li>服务监听地址问题,很几个服务配置模板取的是vip地址监听,会导致错误,需要修改成0.0.0.0,应该是个Bug.
+如果自己修改的话，需要先修改 vm .erb 模板的变量,再修改配置,最后别忘记重启 monit restart all</li>
+<li>部署并发进程问题,这也应该是个Bug,初次部署,会一次性部署所有的VM,比如29个VM，openstack需要时间,但部署超时90S，超时后会报错误。
+所以，需要手工修改并发的数量: <a href="https://github.com/cloudfoundry/bosh/blob/master/director/lib/director/jobs/update_deployment.rb#L85">https://github.com/cloudfoundry/bosh/blob/master/director/lib/director/jobs/update_deployment.rb#L85</a>
+ps：貌似bug已经修复，可以通过(director/templates/director.yml.erb)这个模板调配。</li>
+</ol>
+
+<p><strong>参考资源</strong><br />
+<a href="http://cndocs.cloudfoundry.com/">http://cndocs.cloudfoundry.com/</a><br />
+<a href="http://blog.csdn.net/alan90121/article/details/8181962">http://blog.csdn.net/alan90121/article/details/8181962</a><br />
+<a href="http://cloudfoundry.github.com/">http://cloudfoundry.github.com/</a><br />
+<a href="https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/bosh-users">https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/bosh-users</a><br />
+<a href="https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/vcap-dev">https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/vcap-dev</a></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html" title="Cloudfoundry on Openstack 使用 BOSH 完整部署(2)">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/2013/04/11/Cloudfoundry-on-Openstack-%E4%BD%BF%E7%94%A8-BOSH-%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2%281%29.html" title="Cloudfoundry on Openstack 使用 BOSH 完整部署(1)">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2013-04-16</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#cloudfoundry-ref">cloudfoundry <span>3</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#cloudfoundry-openstack-bosh-deploy-%E5%AE%8C%E6%95%B4-%E9%83%A8%E7%BD%B2-ref">cloudfoundry openstack bosh deploy 完整 部署 <span>3</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Leftleg 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script>
+    var _gaq=[['_setAccount','UA-123-12'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+  </body>
+</html>

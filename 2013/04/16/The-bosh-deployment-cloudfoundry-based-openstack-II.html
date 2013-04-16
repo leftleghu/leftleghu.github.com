@@ -2,9 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>运维基础</title>
-  
-    <meta name="description" content="linux Bash vim grep awk sed">
+    <title>Cloudfoundry on Openstack 使用 BOSH 完整部署(2)</title>
   
     <meta name="author" content="Leftleg">
 
@@ -80,32 +78,103 @@
 
       <div class="content">
         <div class="page-header">
-  <h1>运维基础 </h1>
+  <h1>Cloudfoundry on Openstack 使用 BOSH 完整部署(2) </h1>
 </div>
 
 <div class="row">
   <div class="span8">
-    <p>好久没看RSS，发现酷壳几篇文章概括了运维的基本知识点,肯定不全,但熟练掌握,平时工作效率应该会提升很多</p>
+    <pre><code>bosh target http://1.2.3.4 (micro-bosh ip)
+Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)'
+Your username: admin
+Enter password: *****
+Logged in as `admin'
+target 到 micro-bosh
+</code></pre>
 
-<p><strong>应该知道的Linux技巧</strong> <a href="http://coolshell.cn/articles/8883.html" title="应该知道的Linux技巧">http://coolshell.cn/articles/8883.html</a></p>
+<p>查看对应openstack最新的 stemcells</p>
 
-<p><strong>sed 简明教程</strong>  <a href="http://coolshell.cn/articles/9104.html" title="sed 简明教程">http://coolshell.cn/articles/9104.html</a></p>
+<pre><code>bosh public stemcells --all
+</code></pre>
 
-<p><strong>AWK 简明教程</strong> <a href="http://coolshell.cn/articles/9070.html" title="AWK 简明教程">http://coolshell.cn/articles/9070.html</a></p>
+<p>下载 stemcells (比较漫长,看到国外网络状况)</p>
+
+<pre><code>bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
+</code></pre>
+
+<p>上传到本地</p>
+
+<pre><code>bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
+</code></pre>
+
+<p>建立部署目录，下载bosh源码</p>
+
+<pre><code>mkdir /root/.bosh_deployments
+git clone git://github.com/cloudfoundry/bosh.git
+</code></pre>
+
+<p>检查更新,下载所有依赖包，并把整个BOSH打包成一个tar包
+这步时间更长,需要耐心,首先会从一个 Blob 服务器下载二进制文件。然后它会构建包并生成清单文件</p>
+
+<pre><code>cd bosh/release
+git submodule update --init
+bosh create release --with-tarball --force
+</code></pre>
+
+<p>将创建好的Release tar包上传到Micro BOSH的director</p>
+
+<pre><code>bosh upload release dev_releases/bosh-x-y-dev.tgz
+</code></pre>
+
+<p>确认 releases &amp; stemcell 无误</p>
+
+<pre><code>bosh releases
+bosh deployments
+</code></pre>
+
+<p>部署清单可参照:
+<a href="https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml">https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml</a></p>
+
+<pre><code>bosh deployment bosh-release.yml
+bosh deploy
+</code></pre>
+
+<p>部署完成后,一共8个VM</p>
+
+<pre><code>bosh vms
++----------------------+---------+---------------+-----------------------------+
+| Job/index            | State   | Resource Pool | IPs                         |
++----------------------+---------+---------------+-----------------------------+
+| blobstore/0          | running | small         | 172.16.13.31                |
+| director/0           | running | small         | 172.16.13.28, 172.16.13.195 |
+| health_monitor/0     | running | small         | 172.16.13.30                |
+| nats/0               | running | small         | 172.16.13.16                |
+| openstack_registry/0 | running | small         | 172.16.13.29                |
+| postgres/0           | running | small         | 172.16.13.26                |
+| powerdns/0           | running | small         | 172.16.13.27, 172.16.13.194 |
+| redis/0              | running | small         | 172.16.13.15                |
++----------------------+---------+---------------+-----------------------------+
+</code></pre>
+
+<p>同样,如果部署中途遇到失败,不要手工删除vm，需要使用如下命令重来:</p>
+
+<pre><code>bosh -n delete deployment &lt;name&gt; --force
+</code></pre>
+
+<p>部署注意DNS设置,如果有问题,DNS设置成 <strong>micro-bosh ip</strong></p>
 
     <hr>
     <div class="pagination">
       <ul>
         <ul>
           
+            <li class="prev"><a href="/2013/04/16/sa-basic.html" title="运维基础">&larr; Previous</a></li>
           
-            <li class="prev disabled"><a>&larr; Previous</a></li>
           
 
             <li><a href="/archive">Archive</a></li>
 
           
-            <li class="next"><a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html" title="Cloudfoundry on Openstack 使用 BOSH 完整部署(2)">Next &rarr;</a></li>
+            <li class="next"><a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-III.html" title="Cloudfoundry on Openstack 使用 BOSH 完整部署 (3)">Next &rarr;</a></li>
           
           
         </ul>
@@ -137,7 +206,7 @@
     <ul class="tag_box">
     
       <li>
-  <a href="/categories/#%E8%BF%90%E7%BB%B4-ref">运维 <span>1</span></a>
+  <a href="/categories/#cloudfoundry-ref">cloudfoundry <span>3</span></a>
 </li>
     
     </ul>
@@ -146,7 +215,7 @@
     <ul class="tag_box">
     
       <li>
-  <a href="/tags/#linux-Bash-vim-grep-awk-sed-ref">linux Bash vim grep awk sed <span>1</span></a>
+  <a href="/tags/#cloudfoundry-openstack-bosh-deploy-%E5%AE%8C%E6%95%B4-%E9%83%A8%E7%BD%B2-ref">cloudfoundry openstack bosh deploy 完整 部署 <span>3</span></a>
 </li>
     
     </ul>
