@@ -3,7 +3,20 @@
   <channel>
     <title>Leftleg&#39;s blog</title>
     <link>http://leftleg.hzpub.com</link>
-    <pubDate>2013-04-11 08:40:35 +0800</pubDate>
+    <pubDate>2013-04-16 01:56:31 +0800</pubDate>
+    <item>
+      <title>运维基础</title>
+      <link>http://leftleg.hzpub.com/2013/04/16/sa-basic.html</link>
+      <pubDate>2013-04-16 12:00:00 +0800</pubDate>
+      <description>&lt;p&gt;好久没看RSS，发现酷壳几篇文章概括了运维的基本知识点,肯定不全,但熟练掌握,平时工作效率应该会提升很多&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;应该知道的Linux技巧&lt;/strong&gt; &lt;a href=&#34;http://coolshell.cn/articles/8883.html&#34; title=&#34;应该知道的Linux技巧&#34;&gt;http://coolshell.cn/articles/8883.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;sed 简明教程&lt;/strong&gt;  &lt;a href=&#34;http://coolshell.cn/articles/9104.html&#34; title=&#34;sed 简明教程&#34;&gt;http://coolshell.cn/articles/9104.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;AWK 简明教程&lt;/strong&gt; &lt;a href=&#34;http://coolshell.cn/articles/9070.html&#34; title=&#34;AWK 简明教程&#34;&gt;http://coolshell.cn/articles/9070.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Cloudfoundry on Openstack 使用 BOSH 完整部署(1)</title>
       <link>http://leftleg.hzpub.com/2013/04/11/Cloudfoundry-on-Openstack-%E4%BD%BF%E7%94%A8-BOSH-%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2%281%29.html</link>
