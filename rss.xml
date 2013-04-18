@@ -3,7 +3,7 @@
   <channel>
     <title>Leftleg&#39;s blog</title>
     <link>http://leftleg.hzpub.com</link>
-    <pubDate>2013-04-16 03:43:11 +0800</pubDate>
+    <pubDate>2013-04-18 08:43:35 +0800</pubDate>
     <item>
       <title>运维基础</title>
       <link>http://leftleg.hzpub.com/2013/04/16/sa-basic.html</link>
@@ -239,6 +239,35 @@ ps：貌似bug已经修复，可以通过(director/templates/director.yml.erb)�
 </description>
     </item>
     <item>
+      <title>A new beginning</title>
+      <link>http://leftleg.hzpub.com/2013/04/11/A-new-beginning.html</link>
+      <pubDate>2013-04-11 12:00:00 +0800</pubDate>
+      <description>&lt;p&gt;Blog 一个新的开始,以前的Blog还在openshift,换了域名leftleghu.hzpub.com
+不能访问?要翻墙唉！&lt;/p&gt;
+
+&lt;h2&gt;&lt;img src=&#34;http://pic.yupoo.com/leftleg/C5b6Xltz/medium.jpg&#34; alt=&#34;新的开始&#34; /&gt;
+&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;现在寄居在 Github,相对于以前的地方有如下好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;免费,完全免费&lt;/li&gt;
+&lt;li&gt;稳定,相对于之前的 cloudfoundry appfog openshift,一圈用下来,应该会更稳定.&lt;/li&gt;
+&lt;li&gt;速度快,虽然都在国外,但 cloudfoundry appfog openshift 因为某些原因都是龟速.当然静态的轻量级也是其中一个原因.&lt;/li&gt;
+&lt;li&gt;至上次刷票事件以后,Github 的经历,至少目前来说被xx的可能不大.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;需要注意的地方:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;因为是静态的缘故,写博客就没有以前那么方便了,还需要操作 Github,如果你也想放在Github的话.&lt;/li&gt;
+&lt;li&gt;其他的,或者具体的,提供几个关键字: &lt;a href=&#34;https://github.com/wendal/gor&#34; title=&#34;gor&#34;&gt;gor&lt;/a&gt; &lt;a href=&#34;http://ruhoh.com/&#34; title=&#34;ruhoh&#34;&gt;ruhoh&lt;/a&gt; &lt;a href=&#34;http://wowubuntu.com/markdown/&#34; title=&#34;markdown&#34;&gt;markdown&lt;/a&gt; &lt;a href=&#34;http://markdownpad.com&#34; title=&#34;markdownpad&#34;&gt;markdownpad&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    <item>
       <title>Cloudfoundry on Openstack 使用 BOSH 完整部署(1)</title>
       <link>http://leftleg.hzpub.com/2013/04/11/Cloudfoundry-on-Openstack-%E4%BD%BF%E7%94%A8-BOSH-%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2%281%29.html</link>
       <pubDate>2013-04-11 12:00:00 +0800</pubDate>
@@ -395,35 +424,6 @@ tail -f microbosh-openstack/bosh_micro_deploy.log
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;如果遇到问题，需要重建，最好通过此命令删除 micro-bosh,不要手工删除虚拟机&lt;/p&gt;
-</description>
-    </item>
-    <item>
-      <title>A new beginning</title>
-      <link>http://leftleg.hzpub.com/2013/04/11/A-new-beginning.html</link>
-      <pubDate>2013-04-11 12:00:00 +0800</pubDate>
-      <description>&lt;p&gt;Blog 一个新的开始,以前的Blog还在openshift,换了域名leftleghu.hzpub.com
-不能访问?要翻墙唉！&lt;/p&gt;
-
-&lt;h2&gt;&lt;img src=&#34;http://pic.yupoo.com/leftleg/C5b6Xltz/medium.jpg&#34; alt=&#34;新的开始&#34; /&gt;
-&lt;/h2&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;现在寄居在 Github,相对于以前的地方有如下好处：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;免费,完全免费&lt;/li&gt;
-&lt;li&gt;稳定,相对于之前的 cloudfoundry appfog openshift,一圈用下来,应该会更稳定.&lt;/li&gt;
-&lt;li&gt;速度快,虽然都在国外,但 cloudfoundry appfog openshift 因为某些原因都是龟速.当然静态的轻量级也是其中一个原因.&lt;/li&gt;
-&lt;li&gt;至上次刷票事件以后,Github 的经历,至少目前来说被xx的可能不大.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;需要注意的地方:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;因为是静态的缘故,写博客就没有以前那么方便了,还需要操作 Github,如果你也想放在Github的话.&lt;/li&gt;
-&lt;li&gt;其他的,或者具体的,提供几个关键字: &lt;a href=&#34;https://github.com/wendal/gor&#34; title=&#34;gor&#34;&gt;gor&lt;/a&gt; &lt;a href=&#34;http://ruhoh.com/&#34; title=&#34;ruhoh&#34;&gt;ruhoh&lt;/a&gt; &lt;a href=&#34;http://wowubuntu.com/markdown/&#34; title=&#34;markdown&#34;&gt;markdown&lt;/a&gt; &lt;a href=&#34;http://markdownpad.com&#34; title=&#34;markdownpad&#34;&gt;markdownpad&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
   </channel>
