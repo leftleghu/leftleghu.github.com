@@ -85,15 +85,38 @@
 </div>
 
 <div class="row">
-	<script type="text/javascript"> 
-alimama_pid="mm_10007862_3510619_11505908"; 
-alimama_width=950; 
-alimama_height=90; 
-</script> 
-<script src="http://a.alimama.cn/inf.js" type="text/javascript"> 
-</script>
   <div class="span12">
     
+
+<div class="post">
+  <h3 class="title"><a href="/2013/04/27/openstack-goodnews.html">openstack 要红</a> <span class="date">2013-04-27</span></h3>
+
+  <p>这几天来自于花旗银行的一份关于Openstack的一份报告，又引发了 Openstack 热潮.</p>
+
+<p>点击这里 &ndash;&gt; <a href="http://www.csdn.net/article/2013-04-25/2815050-how_does_OpenStack_impact_the_software" title="OpenStack将怎样影响软件行业？">OpenStack将怎样影响软件行业？</a></p>
+
+<p><strong>我想说的是</strong></p>
+
+<p>第三方开始发力了</p>
+
+<p><strong>Dell crowbar</strong>  <a href="http://crowbar.github.io/home.html">http://crowbar.github.io/home.html</a></p>
+
+<ul>
+<li>server discovery</li>
+<li>firmware upgrades</li>
+<li>operating system installation via PXE Boot.</li>
+<li>application deployment via Chef.</li>
+</ul>
+
+<p><strong>Redhat RDO</strong> <a href="http://openstack.redhat.com/">http://openstack.redhat.com/</a></p>
+
+<p>三步部署</p>
+
+
+  <div class="more">
+    <a href="/2013/04/27/openstack-goodnews.html" class="btn">read more..</a>
+  </div>
+</div>
 
 <div class="post">
   <h3 class="title"><a href="/2013/04/16/sa-basic.html">运维基础</a> <span class="date">2013-04-16</span></h3>
@@ -109,38 +132,6 @@ alimama_height=90;
 
   <div class="more">
     <a href="/2013/04/16/sa-basic.html" class="btn">read more..</a>
-  </div>
-</div>
-
-<div class="post">
-  <h3 class="title"><a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html">Cloudfoundry on Openstack 使用 BOSH 完整部署(2)</a> <span class="date">2013-04-16</span></h3>
-
-  <pre><code>bosh target http://1.2.3.4 (micro-bosh ip)
-Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)'
-Your username: admin
-Enter password: *****
-Logged in as `admin'
-target 到 micro-bosh
-</code></pre>
-
-<p>查看对应openstack最新的 stemcells</p>
-
-<pre><code>bosh public stemcells --all
-</code></pre>
-
-<p>下载 stemcells (比较漫长,看到国外网络状况)</p>
-
-<pre><code>bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
-</code></pre>
-
-<p>上传到本地</p>
-
-<pre><code>bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
-</code></pre>
-
-
-  <div class="more">
-    <a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html" class="btn">read more..</a>
   </div>
 </div>
 
@@ -198,6 +189,38 @@ login   1   xx.xx.xx.xx 1 GB    1   8   可选<br />
 
   <div class="more">
     <a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-III.html" class="btn">read more..</a>
+  </div>
+</div>
+
+<div class="post">
+  <h3 class="title"><a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html">Cloudfoundry on Openstack 使用 BOSH 完整部署(2)</a> <span class="date">2013-04-16</span></h3>
+
+  <pre><code>bosh target http://1.2.3.4 (micro-bosh ip)
+Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)'
+Your username: admin
+Enter password: *****
+Logged in as `admin'
+target 到 micro-bosh
+</code></pre>
+
+<p>查看对应openstack最新的 stemcells</p>
+
+<pre><code>bosh public stemcells --all
+</code></pre>
+
+<p>下载 stemcells (比较漫长,看到国外网络状况)</p>
+
+<pre><code>bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
+</code></pre>
+
+<p>上传到本地</p>
+
+<pre><code>bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
+</code></pre>
+
+
+  <div class="more">
+    <a href="/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html" class="btn">read more..</a>
   </div>
 </div>
 

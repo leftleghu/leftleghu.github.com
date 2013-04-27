@@ -4,17 +4,22 @@
 		<loc>http://leftleg.hzpub.com/</loc>
 	</url>
 	<url>
+		<loc>http://leftleg.hzpub.com/2013/04/27/openstack-goodnews.html</loc>
+		<lastmod>2013-04-27</lastmod>
+		<changefreq>weekly</changefreq>
+	</url>
+	<url>
 		<loc>http://leftleg.hzpub.com/2013/04/16/sa-basic.html</loc>
 		<lastmod>2013-04-16</lastmod>
 		<changefreq>weekly</changefreq>
 	</url>
 	<url>
-		<loc>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html</loc>
+		<loc>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-III.html</loc>
 		<lastmod>2013-04-16</lastmod>
 		<changefreq>weekly</changefreq>
 	</url>
 	<url>
-		<loc>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-III.html</loc>
+		<loc>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html</loc>
 		<lastmod>2013-04-16</lastmod>
 		<changefreq>weekly</changefreq>
 	</url>

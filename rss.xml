@@ -3,7 +3,46 @@
   <channel>
     <title>Leftleg&#39;s blog</title>
     <link>http://leftleg.hzpub.com</link>
-    <pubDate>2013-04-18 08:43:35 +0800</pubDate>
+    <pubDate>2013-04-27 04:24:57 +0800</pubDate>
+    <item>
+      <title>openstack 要红</title>
+      <link>http://leftleg.hzpub.com/2013/04/27/openstack-goodnews.html</link>
+      <pubDate>2013-04-27 12:00:00 +0800</pubDate>
+      <description>&lt;p&gt;这几天来自于花旗银行的一份关于Openstack的一份报告，又引发了 Openstack 热潮.&lt;/p&gt;
+
+&lt;p&gt;点击这里 &amp;ndash;&amp;gt; &lt;a href=&#34;http://www.csdn.net/article/2013-04-25/2815050-how_does_OpenStack_impact_the_software&#34; title=&#34;OpenStack将怎样影响软件行业？&#34;&gt;OpenStack将怎样影响软件行业？&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;我想说的是&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;第三方开始发力了&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Dell crowbar&lt;/strong&gt;  &lt;a href=&#34;http://crowbar.github.io/home.html&#34;&gt;http://crowbar.github.io/home.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;server discovery&lt;/li&gt;
+&lt;li&gt;firmware upgrades&lt;/li&gt;
+&lt;li&gt;operating system installation via PXE Boot.&lt;/li&gt;
+&lt;li&gt;application deployment via Chef.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Redhat RDO&lt;/strong&gt; &lt;a href=&#34;http://openstack.redhat.com/&#34;&gt;http://openstack.redhat.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;三步部署&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Step 0: Prerequisites&lt;/li&gt;
+&lt;li&gt;Step 1: Software repositories&lt;/li&gt;
+&lt;li&gt;Step 2: Install Packstack Installer&lt;/li&gt;
+&lt;li&gt;Step 3: Run Packstack to install OpenStack&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;mirantis fuel&lt;/strong&gt; &lt;a href=&#34;http://fuel.mirantis.com&#34;&gt;http://fuel.mirantis.com&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;step-by-step through the process of creating a &lt;strong&gt;high-availability OpenStack cluster&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来,我打算都体验一下&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>运维基础</title>
       <link>http://leftleg.hzpub.com/2013/04/16/sa-basic.html</link>
@@ -15,90 +54,6 @@
 &lt;p&gt;&lt;strong&gt;sed 简明教程&lt;/strong&gt;  &lt;a href=&#34;http://coolshell.cn/articles/9104.html&#34; title=&#34;sed 简明教程&#34;&gt;http://coolshell.cn/articles/9104.html&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;AWK 简明教程&lt;/strong&gt; &lt;a href=&#34;http://coolshell.cn/articles/9070.html&#34; title=&#34;AWK 简明教程&#34;&gt;http://coolshell.cn/articles/9070.html&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    <item>
-      <title>Cloudfoundry on Openstack 使用 BOSH 完整部署(2)</title>
-      <link>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html</link>
-      <pubDate>2013-04-16 12:00:00 +0800</pubDate>
-      <description>&lt;pre&gt;&lt;code&gt;bosh target http://1.2.3.4 (micro-bosh ip)
-Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)&#39;
-Your username: admin
-Enter password: *****
-Logged in as `admin&#39;
-target 到 micro-bosh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;查看对应openstack最新的 stemcells&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh public stemcells --all
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;下载 stemcells (比较漫长,看到国外网络状况)&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上传到本地&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;建立部署目录，下载bosh源码&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mkdir /root/.bosh_deployments
-git clone git://github.com/cloudfoundry/bosh.git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;检查更新,下载所有依赖包，并把整个BOSH打包成一个tar包
-这步时间更长,需要耐心,首先会从一个 Blob 服务器下载二进制文件。然后它会构建包并生成清单文件&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd bosh/release
-git submodule update --init
-bosh create release --with-tarball --force
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;将创建好的Release tar包上传到Micro BOSH的director&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh upload release dev_releases/bosh-x-y-dev.tgz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;确认 releases &amp;amp; stemcell 无误&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh releases
-bosh deployments
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;部署清单可参照:
-&lt;a href=&#34;https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml&#34;&gt;https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh deployment bosh-release.yml
-bosh deploy
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;部署完成后,一共8个VM&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh vms
-+----------------------+---------+---------------+-----------------------------+
-| Job/index            | State   | Resource Pool | IPs                         |
-+----------------------+---------+---------------+-----------------------------+
-| blobstore/0          | running | small         | 172.16.13.31                |
-| director/0           | running | small         | 172.16.13.28, 172.16.13.195 |
-| health_monitor/0     | running | small         | 172.16.13.30                |
-| nats/0               | running | small         | 172.16.13.16                |
-| openstack_registry/0 | running | small         | 172.16.13.29                |
-| postgres/0           | running | small         | 172.16.13.26                |
-| powerdns/0           | running | small         | 172.16.13.27, 172.16.13.194 |
-| redis/0              | running | small         | 172.16.13.15                |
-+----------------------+---------+---------------+-----------------------------+
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;同样,如果部署中途遇到失败,不要手工删除vm，需要使用如下命令重来:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bosh -n delete deployment &amp;lt;name&amp;gt; --force
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;部署注意DNS设置,如果有问题,DNS设置成 &lt;strong&gt;micro-bosh ip&lt;/strong&gt;&lt;/p&gt;
 </description>
     </item>
     <item>
@@ -236,6 +191,90 @@ ps：貌似bug已经修复，可以通过(director/templates/director.yml.erb)�
 &lt;a href=&#34;http://cloudfoundry.github.com/&#34;&gt;http://cloudfoundry.github.com/&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&#34;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/bosh-users&#34;&gt;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/bosh-users&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&#34;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/vcap-dev&#34;&gt;https://groups.google.com/a/cloudfoundry.org/forum/?fromgroups=#!forum/vcap-dev&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Cloudfoundry on Openstack 使用 BOSH 完整部署(2)</title>
+      <link>http://leftleg.hzpub.com/2013/04/16/The-bosh-deployment-cloudfoundry-based-openstack-II.html</link>
+      <pubDate>2013-04-16 12:00:00 +0800</pubDate>
+      <description>&lt;pre&gt;&lt;code&gt;bosh target http://1.2.3.4 (micro-bosh ip)
+Target set to `microbosh-openstack (http://1.2.3.4:25555) Ver: 0.6 (release:ce0274ec bosh:0d9ac4d4)&#39;
+Your username: admin
+Enter password: *****
+Logged in as `admin&#39;
+target 到 micro-bosh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;查看对应openstack最新的 stemcells&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh public stemcells --all
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下载 stemcells (比较漫长,看到国外网络状况)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh download public stemcell bosh-stemcell-openstack-0.6.7.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上传到本地&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh upload stemcell bosh-stemcell-openstack-0.6.7.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;建立部署目录，下载bosh源码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir /root/.bosh_deployments
+git clone git://github.com/cloudfoundry/bosh.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;检查更新,下载所有依赖包，并把整个BOSH打包成一个tar包
+这步时间更长,需要耐心,首先会从一个 Blob 服务器下载二进制文件。然后它会构建包并生成清单文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd bosh/release
+git submodule update --init
+bosh create release --with-tarball --force
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;将创建好的Release tar包上传到Micro BOSH的director&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh upload release dev_releases/bosh-x-y-dev.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;确认 releases &amp;amp; stemcell 无误&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh releases
+bosh deployments
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;部署清单可参照:
+&lt;a href=&#34;https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml&#34;&gt;https://github.com/leftleghu/cloudfoundry/blob/master/bosh-release.yml&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh deployment bosh-release.yml
+bosh deploy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;部署完成后,一共8个VM&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh vms
++----------------------+---------+---------------+-----------------------------+
+| Job/index            | State   | Resource Pool | IPs                         |
++----------------------+---------+---------------+-----------------------------+
+| blobstore/0          | running | small         | 172.16.13.31                |
+| director/0           | running | small         | 172.16.13.28, 172.16.13.195 |
+| health_monitor/0     | running | small         | 172.16.13.30                |
+| nats/0               | running | small         | 172.16.13.16                |
+| openstack_registry/0 | running | small         | 172.16.13.29                |
+| postgres/0           | running | small         | 172.16.13.26                |
+| powerdns/0           | running | small         | 172.16.13.27, 172.16.13.194 |
+| redis/0              | running | small         | 172.16.13.15                |
++----------------------+---------+---------------+-----------------------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同样,如果部署中途遇到失败,不要手工删除vm，需要使用如下命令重来:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bosh -n delete deployment &amp;lt;name&amp;gt; --force
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;部署注意DNS设置,如果有问题,DNS设置成 &lt;strong&gt;micro-bosh ip&lt;/strong&gt;&lt;/p&gt;
 </description>
     </item>
     <item>
